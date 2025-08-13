@@ -1,7 +1,8 @@
-//Digital-Billing-System
 #include <iostream>
 #include <conio.h>
 #include <fstream>
+
+
 
 using namespace std;
 
@@ -18,7 +19,8 @@ public: //function
     void admin();
     void customer();
     void add();
-
+    void serch();
+    void edit();
 };
 
 void bill::menu() // difine menu function of bill class
@@ -38,7 +40,7 @@ void bill::menu() // difine menu function of bill class
     switch(choice)
     {
     case 1:
-         //sytem("cls");
+         system("cls");
          cout<<"\n\n\t\t\tLogin System";
          cout<<"\n\n E-mail : ";
          cin>>email;
@@ -94,8 +96,10 @@ void bill::admin()  //admin function of bill class
         add();
         break;
     case 2:
+        serch();
         break;
      case 3:
+         edit();
         break;
     case 4:
         break;
@@ -182,6 +186,89 @@ void bill::admin()  //admin function of bill class
         file.close();
     }
   }
+  cout<<"\n\n\t\t Record Inserted Successfully...";
+}
+
+void bill::serch() // search function of bill class
+{
+    system("cls");
+    int p_c;
+    int found=0;
+    fstream file;
+    cout<<"\n\n\t\t\tSearch Record";
+    cout<<"\n\n Product Code: ";
+    cin>>p_c;
+    file.open("product.txt",ios::in);
+    if( !file){
+        cout<<"\n\n File Oppening Error...";
+    }
+    else{
+        file>>code>>name>>price>>discount;
+        while( !file.eof()){
+            if(p_c == code ){
+                cout<<"\n\n\t\tSearch Record";
+                cout<<"\n\n Product Code :"<<code;
+                cout<<"\n\n Name :"<<name;
+                cout<<"\n\n Price :"<<price;
+                cout<<"\n\n Discount :"<<discount<<"%";
+                found++;
+            }
+            file>>code>>name>>price>>discount;
+        }
+        file.close();
+        if( found == 0 )
+            cout<<"\n\n Record not found...";
+    }
+}
+
+void bill::edit()  //edit function of bill calss
+{
+    system("cls");
+    int p_c;
+    int found=0,c;
+    float p,d;
+    string n;
+    fstream file,file1;
+    cout<<"\n\n\t\t\tEdit Record";
+    cout<<"\n\n Product Code: ";
+    cin>>p_c;
+    file.open("product.txt",ios::in);
+    if( !file){
+        cout<<"\n\n File Oppening Error...";
+    }
+    else{
+
+        file1.open("product1.txt",ios::app|ios::out);
+        file>>code>>name>>price>>discount;
+        while( !file.eof()){
+            if(p_c == code ){
+
+                cout<<"\n\n Product New Code : ";
+                cin>>c;
+                cout<<"\n\n Name : ";
+                cin>>n;
+                cout<<"\n\n Price : ";
+                cin>>p;
+                cout<<"\n\n Discount in %: ";
+                cin>>d;
+                file<<" "<<c<<" "<<n<<" "<<p<<" "<<d<<"\n";
+                cout<<"\n\n\t\tRecord Edit Successfully....";
+                found++;
+            }
+            else{
+               file<<" "<<code<<" "<<name<<" "<<price<<" "<<discount<<"\n";
+
+            }
+            file>>code>>name>>price>>discount;
+        }
+        file.close();
+        file1.close();
+        remove("product.txt");
+        rename("product1.txt","product.txt");
+        if( found == 0 )
+            cout<<"\n\n Record not found...";
+    }
+
 }
 
 int main()
@@ -190,5 +277,3 @@ int main()
      b.menu();
 
 }
-
-
